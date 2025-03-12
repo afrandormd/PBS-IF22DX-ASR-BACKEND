@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { genSaltSync, hashSync } from "bcrypt-ts";
 
 // Initialize Prisma Client
 const prisma = new PrismaClient();
@@ -68,12 +69,16 @@ export const POST = async (request: NextRequest) => {
     );
   }
 
+  // buat bcrypt
+  const salt = genSaltSync(10);
+  const result = hashSync(password_value, salt);
+
   // simpan datanya
   const save = await prisma.tb_user.create({
     data: {
       nama: nama_value,
       username: username_value,
-      password: password_value,
+      password: result,
     },
   });
 
