@@ -6,10 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 //buat service delete (parameter = id) tb user
-export const DELETE = async (
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) => {
+export const DELETE = async (request: NextRequest, props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
   // cek apakah data sudah diinput
   const check = await prisma.tb_user.findUnique({
     where: {
@@ -53,3 +51,104 @@ export const DELETE = async (
     }
   );
 };
+
+// buat service "Get" (detail data) tb_user
+export const GET = async (request: NextRequest, props: { params: Promise<{ id: string }> }) => {
+  try {
+
+    const params = await props.params;
+
+    // cek apakah id ada / tidak
+    const check = await prisma.tb_user.findUnique({
+      where: {
+        id: Number(params.id),
+      }
+    })
+
+    // jika data user tidak ditemukan
+    if (!check) {
+      return NextResponse.json({
+        metaData: {
+          error: 1,
+          message: "Data User Tidak di Temukan",
+          status: 404
+        },
+      }, {
+        status: 404
+      })
+    }
+
+    // proses/respond API
+    return NextResponse.json({
+      metaData: {
+        error: 0,
+        masage: "null",
+        status: 200
+      },
+      data_user: check
+    }, {
+      status: 200
+    })
+  }
+  catch (e: any) {
+    return NextResponse.json({
+      metaData: {
+        error: 1,
+        message: "parameter slug harus angka !",
+        status: 400
+      },
+    }, {
+      status: 400
+    })
+  }
+}
+
+// buat server put (edit data) tb_user
+export const PUT = async (request: NextRequest, props: { params: Promise<{ id: string }> }) => {
+  const params = await props.params;
+
+  // cek apakah id ada / tidak
+  const check = await prisma.tb_user.findUnique({
+    where: {
+      id: Number(params.id),
+    }
+  })
+
+  // jika data user tidak ditemukan
+  if (!check) {
+    return NextResponse.json({
+      metaData: {
+        error: 1,
+        message: "Data User Tidak di Temukan",
+        status: 404
+      },
+    }, {
+      status: 404
+    })
+  }
+
+  // buat data objek untuk data isian
+  const { nama_value, usernama_value, password_value } = await request.json()
+
+  const edit = await prisma.tb_user.update({
+    where: {
+      id: Number(params.id),
+    },
+    data: {
+      nama: nama_value,
+      username: usernama_value,
+      password: password_value,
+    },
+  })
+
+  // proses/respond API
+  return NextResponse.json({
+    metaData: {
+      error: 0,
+      masage: "Data User Berhasil Diupdate",
+      status: 200
+    },
+  }, {
+    status: 200
+  })
+}
