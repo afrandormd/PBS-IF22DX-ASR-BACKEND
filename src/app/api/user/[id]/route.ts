@@ -6,8 +6,10 @@ import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
 
 //buat service delete (parameter = id) tb user
-export const DELETE = async (request: NextRequest, props: { params: Promise<{ id: string }> }) => {
-  const params = await props.params;
+export const DELETE = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
   // cek apakah data sudah diinput
   const check = await prisma.tb_user.findUnique({
     where: {
@@ -128,7 +130,30 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
   }
 
   // buat data objek untuk data isian
-  const { nama_value, usernama_value, password_value } = await request.json()
+  const { nama_value, username_value, password_value } = await request.json()
+
+  // cek apakah username sudah pernah ada / belum 
+  const checkUsername = await prisma.tb_user.findMany({
+    where: {
+      username: username_value,
+    },
+  });
+
+  // jika data username ditemukan
+  if (checkUsername.length === 1) {
+    return NextResponse.json(
+      {
+        metaData: {
+          error: 1,
+          message: "Data User Gagal Diubah ! Username telah terdaftar.",
+          status: 409,
+        },
+      },
+      {
+        status: 409,
+      }
+    );
+  }
 
   const edit = await prisma.tb_user.update({
     where: {
@@ -136,7 +161,7 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
     },
     data: {
       nama: nama_value,
-      username: usernama_value,
+      username: username_value,
       password: password_value,
     },
   })
