@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { count } from "console";
 import { NextRequest, NextResponse } from "next/server";
+import { genSaltSync, hashSync } from "bcrypt-ts";
 
 // Initialize Prisma Client
 const prisma = new PrismaClient();
@@ -156,6 +156,10 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
     );
   }
 
+  // buat bcrypt
+  const salt = genSaltSync(10);
+  const result = hashSync(password_value, salt);
+
   const edit = await prisma.tb_user.update({
     where: {
       id: Number(params.id),
@@ -163,7 +167,7 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
     data: {
       nama: nama_value,
       username: username_value,
-      password: password_value,
+      password: result,
     },
   })
 
