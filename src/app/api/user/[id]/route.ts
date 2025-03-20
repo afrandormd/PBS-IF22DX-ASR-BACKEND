@@ -136,11 +136,12 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
   const checkUsername = await prisma.tb_user.findMany({
     where: {
       username: username_value,
+      NOT: { id: Number(params.id) }
     },
   });
 
   // jika data username ditemukan
-  if (checkUsername.length === 1) {
+  if (checkUsername.length >= 1) {
     return NextResponse.json(
       {
         metaData: {
