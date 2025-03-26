@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       {
         metaData: {
           error: 1,
-          message: "Data User Tidak Ditemukan",
+          message: process.env.USER_NOT_FOUND_MESSAGE,
           status: 404,
         },
       },

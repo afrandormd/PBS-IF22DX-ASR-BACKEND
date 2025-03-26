@@ -121,7 +121,7 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
     return NextResponse.json({
       metaData: {
         error: 1,
-        message: "Data User Tidak di Temukan",
+        message: process.env.USER_NOT_FOUND_MESSAGE,
         status: 404
       },
     }, {
