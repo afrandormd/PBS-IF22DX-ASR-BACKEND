@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { genSaltSync, hashSync } from "bcrypt-ts";
-import { prisma } from "../../general";
+import { getResponseUserNotFound, prisma } from "../../general";
 
 
 
@@ -18,18 +18,7 @@ export const DELETE = async (
 
   //jika data ditemukan
   if (!check) {
-    return NextResponse.json(
-      {
-        metaData: {
-          error: 1,
-          message: "Data User Gagal Dihapus! ID User Tidak Ditemukan!",
-          status: 404,
-        },
-      },
-      {
-        status: 404,
-      }
-    );
+    return getResponseUserNotFound
   }
 
   //proses delete data
@@ -68,15 +57,7 @@ export const GET = async (request: NextRequest, props: { params: Promise<{ id: s
 
     // jika data user tidak ditemukan
     if (!check) {
-      return NextResponse.json({
-        metaData: {
-          error: 1,
-          message: "Data User Tidak di Temukan",
-          status: 404
-        },
-      }, {
-        status: 404
-      })
+      return getResponseUserNotFound
     }
 
     // proses/respond API

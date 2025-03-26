@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { genSaltSync, hashSync } from "bcrypt-ts";
-import { prisma } from "../general";
+import { getResponseUserNotFound, prisma } from "../general";
 
 
 // Define the GET function
@@ -8,18 +8,7 @@ export async function GET(request: NextRequest) {
   const users = await prisma.tb_user.findMany({});
   // jika data tidak ada
   if (users.length === 0) {
-    return NextResponse.json(
-      {
-        metaData: {
-          error: 1,
-          message: process.env.USER_NOT_FOUND_MESSAGE,
-          status: 404,
-        },
-      },
-      {
-        status: 404,
-      }
-    );
+    return getResponseUserNotFound
   }
 
   // proses atau response API
