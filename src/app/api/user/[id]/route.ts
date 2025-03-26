@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { genSaltSync, hashSync } from "bcrypt-ts";
+import { prisma } from "../../general";
 
-// Initialize Prisma Client
-const prisma = new PrismaClient();
+
 
 //buat service delete (parameter = id) tb user
 export const DELETE = async (
