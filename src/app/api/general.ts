@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
+import { genSaltSync, hashSync } from "bcrypt-ts";
 
 export const prisma = new PrismaClient();
 
@@ -17,3 +18,11 @@ export const getResponseUserNotFound = NextResponse.json(
   }
 );
 
+// buat fungsi bcrypt
+export const setBcrypt = (real_password: string) => {
+  // buat bcrypt
+  const salt_password = genSaltSync(10);
+  const hash_password = hashSync(real_password, salt_password);
+
+  return hash_password
+}

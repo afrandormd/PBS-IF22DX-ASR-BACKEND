@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { genSaltSync, hashSync } from "bcrypt-ts";
-import { getResponseUserNotFound, prisma } from "../../general";
+import { getResponseUserNotFound, prisma, setBcrypt } from "../../general";
 
 
 
@@ -136,9 +135,6 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
     );
   }
 
-  // buat bcrypt
-  const salt = genSaltSync(10);
-  const result = hashSync(password_value, salt);
 
   const edit = await prisma.tb_user.update({
     where: {
@@ -147,7 +143,7 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
     data: {
       nama: nama_value,
       username: username_value,
-      password: result,
+      password: setBcrypt(password_value),
     },
   })
 
