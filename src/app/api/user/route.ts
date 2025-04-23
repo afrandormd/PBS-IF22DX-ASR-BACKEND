@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const users = await prisma.tb_user.findMany({});
 
   // jika data tidak ada
-  if (users.length != 0) {
+  if (users.length == 0) {
     // return getResponseUserNotFound
     return NextResponse.json(
   {
