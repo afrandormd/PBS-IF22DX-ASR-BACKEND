@@ -5,9 +5,23 @@ import { getResponseUserNotFound, prisma, setBcrypt } from "../general";
 // Define the GET function
 export async function GET(request: NextRequest) {
   const users = await prisma.tb_user.findMany({});
+
   // jika data tidak ada
-  if (users.length === 0) {
-    return getResponseUserNotFound
+  if (users.length != 0) {
+    // return getResponseUserNotFound
+    return NextResponse.json(
+  {
+    metaData: {
+      error: 1,
+      message: process.env.USER_NOT_FOUND_MESSAGE,
+      status: 404,
+    },
+  },
+  {
+    status: 404,
+  }
+);
+
   }
 
   // proses atau response API
