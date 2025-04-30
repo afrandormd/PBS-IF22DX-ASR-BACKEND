@@ -14,7 +14,7 @@ export const getResponseUserNotFound = NextResponse.json(
     },
   },
   {
-    status: 200,
+    status: 404,
   }
 );
 

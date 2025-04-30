@@ -17,7 +17,20 @@ export const DELETE = async (
 
   //jika data ditemukan
   if (!check) {
-    return getResponseUserNotFound
+    // return getResponseUserNotFound
+    return NextResponse.json(
+  {
+    metaData: {
+      error: 1,
+      message: process.env.USER_NOT_FOUND_MESSAGE,
+      status: 404,
+    },
+  },
+  {
+    status: 200,
+  }
+    )
+
   }
 
   //proses delete data
