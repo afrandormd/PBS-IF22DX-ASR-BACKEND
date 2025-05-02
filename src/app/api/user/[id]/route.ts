@@ -44,7 +44,7 @@ export const DELETE = async (
     {
       metaData: {
         error: 0,
-        list: "Data User Berhasil Dihapus",
+        message: "Data User Berhasil Dihapus",
         status: 200,
       },
     },
