@@ -76,7 +76,7 @@ export const GET = async (request: NextRequest, props: { params: Promise<{ id: s
     return NextResponse.json({
       metaData: {
         error: 0,
-        masage: "null",
+        masage: null,
         status: 200
       },
       data_user: check
