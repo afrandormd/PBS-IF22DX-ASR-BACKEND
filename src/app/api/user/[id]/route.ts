@@ -155,7 +155,7 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
         },
       },
       {
-        status: 409,
+        status: 200,
       }
     );
   }
