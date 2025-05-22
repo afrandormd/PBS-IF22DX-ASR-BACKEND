@@ -69,14 +69,26 @@ export const GET = async (request: NextRequest, props: { params: Promise<{ id: s
 
     // jika data user tidak ditemukan
     if (!check) {
-      return getResponseUserNotFound
+      // return getResponseUserNotFound
+      return NextResponse.json(
+        {
+          metaData: {
+            error: 1,
+            message: process.env.USER_NOT_FOUND_MESSAGE,
+            status: 404,
+          },
+        },
+        {
+          status: 200,
+        }
+      );
     }
 
     // proses/respond API
     return NextResponse.json({
       metaData: {
         error: 0,
-        masage: null,
+        message: null,
         status: 200
       },
       data_user: check
@@ -92,7 +104,7 @@ export const GET = async (request: NextRequest, props: { params: Promise<{ id: s
         status: 400
       },
     }, {
-      status: 400
+      status: 200
     })
   }
 }
@@ -164,7 +176,7 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ id: s
   return NextResponse.json({
     metaData: {
       error: 0,
-      masage: "Data User Berhasil Diupdate",
+      message: "Data User Berhasil Diupdate",
       status: 200
     },
   }, {
